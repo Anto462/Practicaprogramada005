@@ -58,7 +58,13 @@ namespace Practicaprogramada005.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SolicitudesId,ServiciosId,Idusuario,Datsauto1,Datsauto2,Datsauto3,Datsauto4,Estadode")] Solicitude solicitude)
         {
-            solicitude.Idusuario = User.Identity.Name;
+            if (User.Identity.Name != null)
+            {
+                solicitude.Idusuario = User.Identity.Name;
+            }
+            else {
+                solicitude.Idusuario = " ";
+            }
             if (solicitude.Estadode != null)
             {
                 _context.Add(solicitude);
