@@ -18,6 +18,7 @@ namespace Practicaprogramada005.Models
 
         public virtual DbSet<Servicio> Servicios { get; set; } = null!;
         public virtual DbSet<Solicitude> Solicitudes { get; set; } = null!;
+        public virtual DbSet<Cliente> Clientes { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -45,6 +46,18 @@ namespace Practicaprogramada005.Models
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("nombre");
+            });
+
+            modelBuilder.Entity<Cliente>(entity =>
+            {
+                entity.HasKey(e => e.IdCliente);
+
+                entity.Property(e => e.Nombre);
+                entity.Property(e => e.Apellidos);
+                entity.Property(e => e.Edad);
+                entity.Property(e => e.Cedula);
+                entity.Property(e => e.Resindencia);
+                entity.Property(e => e.Usuario);
             });
 
             modelBuilder.Entity<Solicitude>(entity =>
@@ -87,6 +100,8 @@ namespace Practicaprogramada005.Models
                     .HasForeignKey(d => d.ServiciosId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Solicitud__Servi__4BAC3F29");
+
+                entity.Property(e => e.Mecanico);
             });
 
             OnModelCreatingPartial(modelBuilder);

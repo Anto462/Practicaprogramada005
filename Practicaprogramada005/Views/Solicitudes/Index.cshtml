@@ -33,6 +33,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Servicios)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mecanico)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -58,12 +61,25 @@
                 @Html.DisplayFor(modelItem => item.Estadode)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Servicios.ServiciosId)
+                @Html.DisplayFor(modelItem => item.Servicios.Nombre)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.SolicitudesId">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.SolicitudesId">Detalle</a> |
+                @Html.DisplayFor(modelItem => item.Mecanico)
+            </td>
+            <td>
+                @{
+                    if(User.Identity.Name == item.Idusuario){
+                <a asp-action="Details" asp-route-id="@item.SolicitudesId">Detalle</a>
                 <a asp-action="Delete" asp-route-id="@item.SolicitudesId">Eliminar</a>
+                    }
+                }
+                    @{
+                        if (User.IsInRole("Mecanico"))
+                        {
+                            <a asp-action="Asignar" asp-route-id="@item.SolicitudesId">Asigbarte</a>
+                            <a asp-action="Details" asp-route-id="@item.SolicitudesId">Detalle</a>
+                        }
+                    }
             </td>
         </tr>
 }

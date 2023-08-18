@@ -34,6 +34,8 @@ namespace Practicaprogramada005.Models
 
         [DisplayName("Estado")]
         public string Estadode { get; set; } = null!;
+        [DisplayName("Mecanico")]
+        public string Mecanico { get; set; } = null!;
 
         public virtual Servicio Servicios { get; set; } = null!;
     }

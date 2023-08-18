@@ -56,8 +56,9 @@ namespace Practicaprogramada005.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SolicitudesId,ServiciosId,Idusuario,Datsauto1,Datsauto2,Datsauto3,Datsauto4,Estadode")] Solicitude solicitude)
+        public async Task<IActionResult> Create([Bind("SolicitudesId,ServiciosId,Idusuario,Datsauto1,Datsauto2,Datsauto3,Datsauto4,Estadode,Mecanico")] Solicitude solicitude)
         {
+            solicitude.Mecanico = "Sin Asignar";
             if (User.Identity.Name != null)
             {
                 solicitude.Idusuario = User.Identity.Name;
@@ -97,14 +98,69 @@ namespace Practicaprogramada005.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SolicitudesId,ServiciosId,Idusuario,Datsauto1,Datsauto2,Datsauto3,Datsauto4,Estadode")] Solicitude solicitude)
+        public async Task<IActionResult> Edit(int id, [Bind("SolicitudesId,ServiciosId,Idusuario,Datsauto1,Datsauto2,Datsauto3,Datsauto4,Estadode,Mecanico")] Solicitude solicitude)
         {
+            solicitude.Mecanico = "Sin Asignar";
             if (id != solicitude.SolicitudesId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (solicitude.Estadode != null)
+            {
+                try
+                {
+                    _context.Update(solicitude);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SolicitudeExists(solicitude.SolicitudesId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ServiciosId"] = new SelectList(_context.Servicios, "ServiciosId", "ServiciosId", solicitude.ServiciosId);
+            return View(solicitude);
+        }
+
+        public async Task<IActionResult> Asignar(int? id)
+        {
+            if (id == null || _context.Solicitudes == null)
+            {
+                return NotFound();
+            }
+
+            var solicitude = await _context.Solicitudes.FindAsync(id);
+            if (solicitude == null)
+            {
+                return NotFound();
+            }
+            ViewData["ServiciosId"] = new SelectList(_context.Servicios, "ServiciosId", "ServiciosId", solicitude.ServiciosId);
+            return View(solicitude);
+        }
+
+        // POST: Solicitudes/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Asignar(int id, [Bind("SolicitudesId,ServiciosId,Idusuario,Datsauto1,Datsauto2,Datsauto3,Datsauto4,Estadode,Mecanico")] Solicitude solicitude)
+        {
+            solicitude.Estadode = "Activo";
+            solicitude.Mecanico = User.Identity.Name;
+            if (id != solicitude.SolicitudesId)
+            {
+                return NotFound();
+            }
+
+            if (solicitude.Estadode != null)
             {
                 try
                 {
