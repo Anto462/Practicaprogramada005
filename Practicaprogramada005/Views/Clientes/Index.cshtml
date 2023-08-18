@@ -2,18 +2,14 @@
 
 @{
     ViewData["Title"] = "Index";
-    var existe=0;
 }
 
 <h1>Index</h1>
 
 @{
-    if (existe == 0)
-    {
         <p>
             <a asp-action="Create">Create New</a>
         </p>
-    }
 }
 <table class="table">
     <thead>
@@ -42,7 +38,6 @@
     <tbody>
 @foreach (var item in Model) {
             if(User.Identity.Name == item.Nombre){
-                existe = 1;
                          <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
